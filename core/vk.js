@@ -53,7 +53,6 @@ var StickProject = {};
             };
 
             StickProject.clearBlocks = function() {
-                console.log('here');
                 var allEmoji_scroll = document.getElementsByClassName('emoji_scroll')
 
                 for (var e in allEmoji_scroll) {
@@ -69,10 +68,13 @@ var StickProject = {};
                 });
 
                 document.getElementById("emoji_tab_1_plus").classList.add("emoji_tab_sel");
+
+                if($("#stiker-title"))
+                    $("#stiker-title").remove();
             };
 
             StickProject.likesUpgrade = function() {
-                
+
 
                 if (document.location.href.indexOf("vk.com/im") !== -1 || document.location.href.indexOf("vk.com/al_im.php") !== -1) {
 
@@ -102,6 +104,8 @@ var StickProject = {};
                         var emoji_scroll = document.createElement('div');
                         emoji_scroll.setAttribute('class', 'emoji_scroll emoji_scroll_govno');
                         emoji_scroll.style.display = 'none';
+
+
                         // emoji_scroll.innerHTML = '<div style="width:96%;padding:5px;border:1px solid #ccc;margin-top: 10px;text-align: center;background:#f0f2f5;">Бесплатные стикеры доступны только в личных сообщениях, нажмите для быстрого перехода</div>';
                         ui_scroll_content.appendChild(emoji_scroll);
 
@@ -110,17 +114,19 @@ var StickProject = {};
                             emoji_scroll.appendChild(sticker);
                         });
 
+
+
                         // <a class="emoji_tab emoji_tab_img_cont emoji_tab_recent emoji_tab_-1 emoji_tab_sel" onclick="return Emoji.tabSwitch(this, -1, 0);"><span class="emoji_tab_icon emoji_sprite emoji_tab_icon_recent"></span></a>
                         var govno_tab = document.createElement('a');
                         govno_tab.innerHTML = '<img width="22" height="22" src="http://img01.bt.co.uk/s/assets/220118/images/ico_share.png" class="emoji_tab_img" style="object-fit: contain;">';
                         // govno_tab.innerHTML = emoji_tab_0.innerHTML;
-                        govno_tab.setAttribute('class', 'emoji_tab emoji_govno emoji_tab_img_cont emoji_tab_recent emoji_tab_1');
+                        govno_tab.setAttribute('class', 'emoji_tab emoji_govno');
                         govno_tab.setAttribute('id', 'emoji_tab_1_plus');
                         // govno_tab.setAttribute('onclick', 'return Emoji.tabSwitch(this, 1, 0);');
-                        govno_tab.setAttribute('onclick', 'return;');
+                        govno_tab.setAttribute('onclick', '');
 
                         govno_tab.onclick = function() {
-                            
+                            $('.emoji_tab_-1').eq(0).click(); //sticker to custom bug fixed
 
                             var allEmoji_scroll = document.getElementsByClassName('emoji_scroll');
 
@@ -140,7 +146,18 @@ var StickProject = {};
 
                             document.getElementById("emoji_tab_1_plus").classList.add("emoji_tab_sel");
 
-                            // $($('.emoji_scroll.emoji_scroll_govno')[0]).scrollTop(0);
+                            // scrollTop
+                            var opts = Emoji.opts[0], tt = opts.tt;
+                            opts.emojiScroll.scrollTop(0);
+
+                            if($("#stiker-title"))
+                                $("#stiker-title").remove();
+
+                            $('.emoji_list_cont').eq(0).prepend(`
+                                <div id="stiker-title">
+                                    Стикеры в дом
+                                </div>
+                            `);
                         };
 
                         // if(emoji_tabs_cont_0)
@@ -149,14 +166,34 @@ var StickProject = {};
 
                         function waitStickerMenu() {
                             if (document.querySelector(".emoji_tab_recent") && document.querySelector(".emoji_tabs_wrap")) {
-                                
+
                                 var emojis = $('.emoji_tab').not('.emoji_govno');
 
                                 emojis.each(function(i, val) {
                                     var exClick = $(val).attr('onclick');
                                     exClick = exClick.replace('return ','');
-                                    $(val).attr('onclick', "StickProject.clearBlocks();" + exClick);
+                                    $(val).attr('onclick', `
+                                        StickProject.clearBlocks();
+                                        ${exClick}
+                                    `);
                                 });
+
+                                var startButton = $($('.emoji_smile._emoji_btn')[0]);
+                                var exMove = startButton.attr('onmouseover');
+
+
+                                // document.getElementsByClassName('ui_scroll_bar_inner')[1].style.transform = "translateY(0px)"
+                                startButton.attr('onmouseover', `
+                                    $($('.emoji_tab.emoji_tab_0')[0]).click();
+                                    var opts = Emoji.opts[0];
+                                    var cont = geByClass1('emoji_tabs_wrap', opts.tt);
+                                    cont.scrollLeft = 0;
+                                    Emoji.scrollToggleArrow(false, 'l', opts);
+                                    var opts = Emoji.opts[0], tt = opts.tt;
+                                    opts.emojiScroll.scrollTop(0);
+                                    ${exMove}
+                                `);
+
                                 return waitStickerMenuOk();
                             }
 
@@ -175,7 +212,7 @@ var StickProject = {};
                                 // var test = document.createElement('a');
                                 // test.setAttribute('class', `emoji_tab emoji_tab_img_cont emoji_tab_${item.id}`);
                                 // test.setAttribute('onclick', `return Emoji.tabSwitch(this, ${item.id}, 0);`);
-                                
+
                                 // test.innerHTML = `<a class="emoji_tab emoji_tab_img_cont emoji_tab_${item.id} emoji_tab_sel" onclick="return Emoji.tabSwitch(this, ${item.id}, 0);"><img width="22" height="22" src="${imgUrl + item.img}" class="emoji_tab_img"></a>`;
                                 test.innerHTML = '<img width="22" height="22" src="' + imgUrl + item.img + '" class="emoji_tab_img" style="object-fit: contain;">';
                                 // test.innerHTML = '<div class="emoji_tab_icon emoji_sprite emoji_tab_icon_0" style="background-image: url(' + item.img + '); background-size: cover;"></div>';
@@ -183,7 +220,7 @@ var StickProject = {};
                                 document.querySelector(".emoji_tabs_wrap > span").insertBefore(test, document.querySelector(".emoji_tab_promo").previousSibling);
                                 // test.style.display = "none";
                                 // var allEmoji = document.getElementsByClassName('emoji_tab_img_cont');
-                                
+
                                 // for (var e in allEmoji) {
                                 //     var el = allEmoji[e];
                                 //     var clickEvent = el.getAttribute('onclick');
@@ -212,6 +249,17 @@ var StickProject = {};
                                     document.getElementById("emoji_tab_1_plus").classList.add("emoji_tab_sel");
                                     // this.classList.add("emoji_tab_sel");
 
+                                    var opts = Emoji.opts[0], tt = opts.tt;
+                                    opts.emojiScroll.scrollTop(0);
+
+                                    if($("#stiker-title"))
+                                        $("#stiker-title").remove();
+
+                                    $('.emoji_list_cont').eq(0).prepend(`
+                                        <div id="stiker-title">
+                                            ${item.name}
+                                        </div>
+                                    `);
                                 };
 
                                 var emoji_scroll = document.createElement('div');
@@ -221,8 +269,15 @@ var StickProject = {};
 
                                 item.stickers.forEach(function(item2, i2, arr2) {
                                     var sticker = new StickProject.govnoStiker(item2.id, imgUrl + item2.img);
+                                    // $('.emoji_list_cont').eq(0).append(`
+                                    //     <div id="stiker-title">
+                                    //         ${item2.name}
+                                    //     </div>
+                                    // `);
                                     emoji_scroll.appendChild(sticker);
                                 });
+                                // <div class="emoji_cat_title_helper" data-id="-1" id="emoji_recent_list0_-1"><div class="emoji_cat_title" style="transform: translateY(0px);">Часто используемые</div></div>
+                                // $(ui_scroll_content).append("<p>Test</p>");
                                 ui_scroll_content.appendChild(emoji_scroll);
                             });
                         }
@@ -283,12 +338,12 @@ var StickProject = {};
                 script.setAttribute('src', '//vk.com/js/api/openapi.js?150');
 
                 script.onload = function() {
+
                     start();
                 };
 
                 function start() {
                     if (document.querySelector(".emoji_tab_recent") && document.querySelector(".emoji_tabs_wrap")) {
-                        
                         return StickProject.likesUpgrade();
                     }
 

@@ -38,17 +38,17 @@
 
 chrome.tabs.onUpdated.addListener(
     function(tabId, changeInfo, tab) {
-        if (tab.url !== undefined && tab.url.indexOf("vk.com/im") != -1 && 
+        if (tab.url !== undefined && tab.url.indexOf("vk.com/im") != -1 &&
         tab.url.indexOf("sel=") != -1 && changeInfo.status == "complete") {
             var currentTabId = "";
             chrome.tabs.query(
                 { currentWindow: true, active: true },
-                function (tabArray) { 
+                function (tabArray) {
                     currentTabId = tabArray[0].id;
 
-                    // chrome.tabs.insertCSS(currentTabId, {
-                    //     file: "core/styles.css"
-                    // });
+                    chrome.tabs.insertCSS(currentTabId, {
+                        file: "core/styles.css"
+                    });
                     chrome.tabs.executeScript(currentTabId, {file: "core/jquery.js"});
                     chrome.tabs.executeScript(currentTabId, {file: "core/inject.js"});
                 }
@@ -56,4 +56,3 @@ chrome.tabs.onUpdated.addListener(
         }
     }
 );
-
