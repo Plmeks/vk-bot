@@ -1,0 +1,27 @@
+{
+   "author": "MAksik",
+   "browser_action": {
+      "default_title": "__MSG_title__"
+   },
+   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+   "default_locale": "ru",
+   "description": "__MSG_desc__",
+   "permissions": [
+        "tabs", "http://*/*", "https://*/*"
+    ],
+   "homepage_url": "https://vk.com",
+   "icons": {
+      "128": "img/sticker_vk_persik_029.png",
+      "16": "img/sticker_vk_persik_029.png",
+      "48": "img/sticker_vk_persik_029.png"
+   },
+   "manifest_version": 2,
+   "name": "__MSG_name__",
+   "offline_enabled": false,
+   "background": {
+        "scripts": ["core/background.js"]
+    },
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "2018.2.11.3",
+   "web_accessible_resources": [ "core/vk.js", "core/styles.css", "core/jquery.js" ]
+}
